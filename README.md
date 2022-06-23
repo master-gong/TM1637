@@ -9,6 +9,10 @@ TM1637/GN1637芯片的驱动程序
 
 文件夹《doc》    TM1637/GN1637芯片的用户手册。
 
+
+![显示图片][1]
+
+
 功能： 
 
 码表有常规数字和字符显示（0-9，ABCDdEFHLrPN-_oU）。
@@ -27,4 +31,7 @@ TM1637/GN1637芯片的驱动程序
 注：本示例程序码表只针对特定数码管模组，不同连线方式需要重新编写码表。
 
 适用模组见：https://gongqijunhui.taobao.com/category-1663332070.htm?spm=a1z10.5-c-s.w4010-22753595293.9.122a7a1cfOQ5dy&search=y&catName=%CF%D4%CA%BE%C4%A3%D7%E9#bd
+
+
+[1]: https://github.com/master-gong/TM1637/blob/main/Video_20220623_111102_658.gif
 
