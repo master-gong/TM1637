@@ -1,0 +1,129 @@
+C51 COMPILER V9.60.0.0   MAIN_TASK                                                         06/23/2022 11:02:00 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN_TASK
+OBJECT MODULE PLACED IN .\Objects\main_task.obj
+COMPILER INVOKED BY: D:\Keil_v5_c51\C51\BIN\C51.EXE App\main_task.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Bsp;.\Bsp\disp_i2c
+                    -;.\Bsp\tm1637) DEBUG OBJECTEXTEND PRINT(.\Listings\main_task.lst) TABS(2) OBJECT(.\Objects\main_task.obj)
+
+line level    source
+
+   1          #include <string.h>
+   2          #include "STC8H.h"
+   3          #include "my_type.h"
+   4          #include "disp_iic.h"
+   5          #include "tm1637.h"
+   6          
+   7          /****************变量定义*****************************/
+   8          _flag            xdata  ucFlag;                     /* 标志位变量 */
+   9          
+  10          
+  11          
+  12          _disp_buff_st xdata dispBuff;
+  13          
+  14          uint16_t xdata  displayCount;
+  15          uint16_t xdata  displayNum;
+  16          
+  17          extern void timer1_init(void);
+  18          /*******************************************
+  19          函数名称：cycle_delay
+  20          功    能：10ms周期实现函数
+  21          参    数：无
+  22          返回值  ：无
+  23          ********************************************/
+  24          static void cycle_delay(void)
+  25          {
+  26   1          while(ucFlag.BIT.CYCLE_FLAG != SET){
+  27   2      
+  28   2          }
+  29   1          ucFlag.BIT.CYCLE_FLAG = CLR;
+  30   1      }
+  31          
+  32          
+  33          
+  34          
+  35          static void display_handle(void)
+  36          {
+  37   1          uint8_t i;
+  38   1          displayCount++;
+  39   1          if(displayCount > 50){ //500ms 切换下一个显示
+  40   2              displayCount = 0;
+  41   2          
+  42   2              displayNum++;  //显示的编号
+  43   2              if(displayNum > 29){
+  44   3                  displayNum = 0;
+  45   3              }
+  46   2          }
+  47   1          
+  48   1          
+  49   1          memset(&dispBuff,0,sizeof(_disp_buff_st));
+  50   1          //-----显示赋值---
+  51   1          //如 显示1 =》 dispBuff.grid_data[i] = 1;
+  52   1          //   显示A =》 dispBuff.grid_data[i] = LED_SIGE_A;
+  53   1          //   显示E =》 dispBuff.grid_data[i] = LED_SIGE_E;
+  54   1          //   不显示 =》 dispBuff.grid_data[i] = LED_SIGE_OFF;
+C51 COMPILER V9.60.0.0   MAIN_TASK                                                         06/23/2022 11:02:00 PAGE 2   
+
+  55   1          for(i=0;i<6;i++){
+  56   2              dispBuff.grid_data[i] = displayNum; 
+  57   2          }
+  58   1      
+  59   1          dispBuff.brightness = 7; //亮度7
+  60   1          
+  61   1          //dispBuff.flip = 1;
+  62   1          //dispBuff.mirror = 1;
+  63   1        
+  64   1          //秒 分隔符 闪烁实现
+  65   1          if(displayNum%2){
+  66   2              dispBuff.sec_flash = 1;
+  67   2          }else{
+  68   2              dispBuff.sec_flash = 0;
+  69   2          }
+  70   1          //驱动调用
+  71   1          drive_tm1637_6bit(dispBuff);
+  72   1      }
+  73          
+  74          static void all_congfig(void)
+  75          { 
+  76   1      
+  77   1          INTCLKO = 0x40;
+  78   1          ucFlag.BYTE = 0;
+  79   1         
+  80   1          init_display_iic_gpio();  //显示端口初始化
+  81   1      
+  82   1          timer1_init(); //1ms定时基础
+  83   1          EA = 1;     //打开总中断
+  84   1      }
+  85          
+  86          
+  87          
+  88          int main(void)
+  89          {     
+  90   1          all_congfig();
+  91   1      
+  92   1          while(1)
+  93   1          {   
+  94   2              //----------10ms循环一次主函数---------------
+  95   2              cycle_delay();
+  96   2      
+  97   2              display_handle();
+  98   2      
+  99   2         }
+ 100   1      }
+ 101          
+ 102          
+ 103          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    205    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     16    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
