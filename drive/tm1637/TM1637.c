@@ -164,8 +164,8 @@ void drive_tm1637_6bit(_disp_buff_st info)
 
   //-------冒号显示------------
     if(info.sec_flash){
-       buff[3] |= SECOND_CODE;
-       buff[5] |= SECOND_CODE;
+       buff[2] |= SECOND_CODE;
+       buff[4] |= SECOND_CODE;
     }
     
     TM1637_SET(buff,7);
